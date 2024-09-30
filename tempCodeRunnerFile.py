@@ -1,1 +1,0 @@
-https://finance.yahoo.com/markets/stocks/gainers/

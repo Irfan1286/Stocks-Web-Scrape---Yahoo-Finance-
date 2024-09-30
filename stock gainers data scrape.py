@@ -34,7 +34,7 @@ def getTable(url):
             if endRow >= total:
 
                 dfCombined = pd.concat(dfList, ignore_index=True)
-                dfCombined.to_csv('output.csv', index=False)
+                dfCombined.to_csv('Example-output.csv', index=False)
 
                 break
 
@@ -49,7 +49,7 @@ def getTable(url):
 
     else:
         pdFrame = getRows(soup)
-        pdFrame.to_csv('output.csv', index=False)
+        pdFrame.to_csv('Example-output.csv', index=False)
 
 # Returns a BS4 result element
 def getSoup(url):
@@ -112,4 +112,4 @@ def getRows(soup):
 
 
 if __name__ == '__main__':
-    getTable('https://finance.yahoo.com/markets/stocks/most-active/')
+    getTable('https://finance.yahoo.com/markets/stocks/gainers/')
