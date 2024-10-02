@@ -1,7 +1,6 @@
 import requests
-from bs4 import BeautifulSoup
 import pandas as pd
-
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
 
@@ -9,14 +8,14 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 def getTable(url):
 
     soup = getSoup(url)
-
-    # When there is no Pagination!
     pagination = soup.find('div', class_='select-dropdown yf-1tdhqb1')
 
+    # When there is no Pagination!
     if pagination == None:
         dfFrame = getRows(soup)
         dfFrame.to_csv('Example-output.csv', index=False)
         
+        return dfFrame
 
     # For 25+ rows of data!
     else:
@@ -39,24 +38,22 @@ def getTable(url):
             total = int(pg_info[1])
             endRow = int(pg_info[0].split('-')[1])
 
-            # Combine DataFrames in list to generate CSV file, & Break the loop!
-            if endRow >= total:
 
-                dfCombined = pd.concat(dfList, ignore_index=True)
-                dfCombined.to_csv('Example-output.csv', index=False)
-
-                break
-            
             # Modifies URL to get next set of data/25-Rows
-            else:
+            if endRow < total:
                 new_url = f'{url}?start={endRow}&count=25'
                 print(new_url)
 
                 driver.get(new_url)
-
                 soup = BeautifulSoup(driver.page_source)
+            
+            # Combine DataFrames in list to generate CSV file, & Break the loop!
+            else:
+                dfCombined = pd.concat(dfList, ignore_index=True)
+                dfCombined.to_csv('Example-output.csv', index=False)
+
+                return dfCombined
         
-        print(dfList)
 
 # Returns the Soup!
 def getSoup(url):
@@ -121,4 +118,5 @@ def getRows(soup):
 
 
 if __name__ == '__main__':
-    getTable('https://finance.yahoo.com/markets/stocks/most-active/')
+    dataFrameTable = getTable('https://finance.yahoo.com/markets/stocks/gainers/')
+    print(dataFrameTable)
