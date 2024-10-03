@@ -29,14 +29,23 @@ def getTable(url):
         while True:
             
             # Get current set of Rows & adds DataFrame to list!
-            dfList.append(getRows(soup))
+            try:
+                dfList.append(getRows(soup))
 
-            # Getting the total rows & Starting Row in table
-            total_pg = soup.find('div', class_='total yf-1tdhqb1').get_text()   #type: ignore
-            pg_info = total_pg.split('of')
+                # Getting the total rows & Starting Row in table
+                total_pg = soup.find('div', class_='total yf-1tdhqb1').get_text()   #type: ignore
+                pg_info = total_pg.split('of')
 
-            total = int(pg_info[1])
-            endRow = int(pg_info[0].split('-')[1])
+                total = int(pg_info[1])
+                endRow = int(pg_info[0].split('-')[1])
+            
+            # The table extracted up until now will be saved, (In Case, loss of internet/PC/other problems) ! 
+            except Exception as errorMSG:
+                print("An Error Has Been Generated! \nPrinting the message: \n", errorMSG)
+                
+                # Within Exception the endRow < total will go to else statement!
+                total = 45
+                endRow = 50
 
 
             # Modifies URL to get next set of data/25-Rows
@@ -69,7 +78,7 @@ def getDriver(url):
     # Setting Options to run Browser Without UI & disabling GPU for increased Performance!
     options = webdriver.EdgeOptions()
     options.add_argument("--headless")  
-    options.add_argument("--disable-gpu") 
+    # options.add_argument("--disable-gpu") 
 
     service = webdriver.EdgeService(EdgeChromiumDriverManager().install())
     driver = webdriver.Edge(service=service, options=options)
