@@ -118,5 +118,5 @@ def getRows(soup):
 
 
 if __name__ == '__main__':
-    dataFrameTable = getTable('https://finance.yahoo.com/markets/stocks/gainers/')
+    dataFrameTable = getTable('https://finance.yahoo.com/markets/stocks/52-week-gainers/')
     print(dataFrameTable)
