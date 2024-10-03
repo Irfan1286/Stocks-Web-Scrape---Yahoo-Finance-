@@ -75,10 +75,9 @@ def getSoup(url):
 # Returns a Soup from driver
 def getDriver(url):
 
-    # Setting Options to run Browser Without UI & disabling GPU for increased Performance!
+    # Setting Options to run Browser Without UI!
     options = webdriver.EdgeOptions()
     options.add_argument("--headless")  
-    # options.add_argument("--disable-gpu") 
 
     service = webdriver.EdgeService(EdgeChromiumDriverManager().install())
     driver = webdriver.Edge(service=service, options=options)
