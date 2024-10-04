@@ -43,7 +43,7 @@ def getTable(url):
             except Exception as errorMSG:
                 print("An Error Has Been Generated! \nPrinting the message: \n", errorMSG)
                 
-                # Within Exception the endRow < total will go to else statement!
+                # For endRow < total to be False & go to else statement!
                 total = 45
                 endRow = 50
 
@@ -58,6 +58,7 @@ def getTable(url):
             
             # Combine DataFrames in list to generate CSV file, & Break the loop!
             else:
+                driver.quit()
                 dfCombined = pd.concat(dfList, ignore_index=True)
                 dfCombined.to_csv('Example-output.csv', index=False)
 
@@ -73,9 +74,9 @@ def getSoup(url):
 # Returns a Soup from driver
 def getDriver(url):
 
-    # Setting Options to run Browser Without UI!
     options = webdriver.EdgeOptions()
-    options.add_argument("--headless")  
+    options.add_argument("--headless=old")      # Disables Browser UI & "=old" means prev.browser to stop white-screen appearance
+    options.add_argument("--log-level=3")       # Disables Unnessary Console Outputs
 
     service = webdriver.EdgeService(EdgeChromiumDriverManager().install())
     driver = webdriver.Edge(service=service, options=options)
@@ -107,9 +108,6 @@ def getRows(soup):
         columns[0].append(cellData[0].find('span', class_='symbol yf-1jpysdn').get_text())
         columns[1].append(cellData[0].find('span', class_='yf-1jpysdn longName').get_text())
 
-    for price in columns[2]:
-        print(price.strip().split(' '))
-    
     columns[2] = [price.strip().split(' ')[0] for price in columns[2]]      # This line removes Unneccessary data that appears for this column
 
     # Creates a Dictionary with all these Columns
