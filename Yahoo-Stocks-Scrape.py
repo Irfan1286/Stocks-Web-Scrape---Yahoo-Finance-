@@ -68,9 +68,7 @@ def getTable(url):
 def getSoup(url):
     request = requests.get(url)
     html = request.text
-    soup = BeautifulSoup(html, 'lxml')
-
-    return soup
+    return BeautifulSoup(html, 'lxml')
 
 # Returns a Soup from driver
 def getDriver(url):
@@ -109,10 +107,12 @@ def getRows(soup):
         columns[0].append(cellData[0].find('span', class_='symbol yf-1jpysdn').get_text())
         columns[1].append(cellData[0].find('span', class_='yf-1jpysdn longName').get_text())
 
+    for price in columns[2]:
+        print(price.strip().split(' '))
+    
+    columns[2] = [price.strip().split(' ')[0] for price in columns[2]]      # This line removes Unneccessary data that appears for this column
 
-    columns[2] = [price.split(' ')[1] for price in columns[2]]      # This line removes Unneccessary data that appears for this column
-
-    # Creates a 2D Dictionary with all these Columns
+    # Creates a Dictionary with all these Columns
     tbColumns = ['Symbol', 'Name', 'Price', 'Change', '%Change', 'Volume', 
                  'AvgVolume', 'MarketCap', 'P/E Ratio (TTM)', '52 Wk Change %']
     tb_dict = {}
